@@ -1,16 +1,56 @@
-import './App.css';
-import SignUpLogin from './Component/SignUpLogin';
-function App() {
-  return(
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import Navbar from './Component/Navbar/Navbar'; // Ensure correct path
+import Home from './Component/Home/Home';
+import SignUpLogin from './Component/Signup-in/SignUpLogin'; // Ensure correct path
+import './App.css'; // Ensure this file is present or remove if not needed
+import ScholarshipDashboard from './Component/Schaolarship/ScholarshipDashboard';
+import StudentInformationForm from './Component/Applied/StudentInformationForm';
+const App = () => {
+  return (
     <>
-    <div className='App'>
-      <SignUpLogin />
-    </div>
+    {/* <SignUpLogin/> */}
+    <Navbar />  
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/sign-in/up" element={<SignUpLogin />} />
+      <Route path="/dashboard" element={<ScholarshipDashboard />} />
+      <Route path="/Apply" element={<StudentInformationForm />} />
+    </Routes>
     </>
-  )
-}
+  );
+};
 
 export default App;
+
+// import React from 'react';
+// import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+// import Navbar from './Component/Navbar/Navbar'; // Ensure correct path
+// import Home from './Component/Home/Home';
+// import SignUpLogin from './Component/Signup-in/SignUpLogin'; // Ensure correct path
+// import ScholarshipDashboard from './Component/Schaolarship/ScholarshipDashboard'; // Ensure correct path
+// import './App.css'; // Ensure this file is present or remove if not needed
+
+// const App = () => {
+//   return (
+//     <>
+//       <Router>
+//         <Navbar />  
+//         <Routes>
+//           <Route path="/" element={<div>
+//             home
+//           </div>} />
+//           <Route path="/sign" element={<SignUpLogin />} />
+//           <Route path="/Dashboard" element={<ScholarshipDashboard />} />
+//           {/* Add other routes here as needed */}
+//         </Routes>
+//       </Router>
+//     </>
+//   );
+// };
+
+// export default App;
+
 
 
 

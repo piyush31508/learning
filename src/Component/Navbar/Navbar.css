@@ -1,0 +1,70 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#navbar {
+    position: fixed; /* Fix the navbar at the top */
+    top: 0; /* Align it to the top of the viewport */
+    left: 0;
+    height: 12vh;
+    width: 100%; /* Take full width of the viewport */
+    background-color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 1000; /* Ensure it stays on top of other content */
+}
+
+#logo img {
+    height: 100%;
+    max-height: 8vh;
+    padding: 10px;
+}
+
+.Navbar-Pages {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+}
+
+#navbar ul {
+    display: flex;
+    list-style-type: none;
+}
+
+#navbar ul li {
+    font-size: 1.2rem;
+    margin: 0 15px;
+}
+
+#navbar ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+#navbar ul li a:hover {
+    background-color: white;
+    color: black;
+    box-shadow: 0px 0px 10px blue;
+}
+
+#search {
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: 2px solid white;
+    transition: all 0.3s ease;
+    width: 250px;
+}
+
+#search:focus, #search:hover {
+    box-shadow: 0px 0px 10px blue;
+    outline: none;
+    border-color: blue;
+}
