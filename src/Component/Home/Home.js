@@ -31,8 +31,13 @@ import { useNavigate } from 'react-router-dom';
 const Home = () => {
     const navigate = useNavigate();
 
-      const handleApplyClick = () => {
-        navigate('/dashboard');
+      const handleApplyClickForm = () => {
+        navigate('/ScholarshipForm');
+      };
+      const navigate2 = useNavigate();
+
+      const handleApplyClickDashboard = () => {
+        navigate2('/Dashboard');
       };
     return (
         <div 
@@ -49,7 +54,7 @@ const Home = () => {
                     </p>
                     <div className="mt-8 flex justify-center space-x-4">
                     <button 
-    onClick={handleApplyClick}
+    onClick={handleApplyClickForm}
     className="px-8 py-3 bg-transparent border border-white text-white font-semibold rounded-full shadow-lg hover:bg-white hover:text-black transition duration-300"
     style={{ width: 'fit-content' }}
 >
@@ -59,8 +64,9 @@ const Home = () => {
 <button  
     className="px-8 py-3 bg-transparent border border-white text-white font-semibold rounded-full shadow-lg hover:bg-white hover:text-black transition duration-300"
     style={{ width: 'fit-content' }}
+    onClick={handleApplyClickDashboard}
 >
-    Learn More
+    View Dashboard
 </button>
 
                     </div>

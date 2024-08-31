@@ -5,7 +5,9 @@ import Home from './Component/Home/Home';
 import SignUpLogin from './Component/Signup-in/SignUpLogin'; // Ensure correct path
 import './App.css'; // Ensure this file is present or remove if not needed
 import ScholarshipDashboard from './Component/Schaolarship/ScholarshipDashboard';
-import StudentInformationForm from './Component/Applied/StudentInformationForm';
+// import StudentInformationForm from './Component/Applied/ScholarshipForm';
+import AboutUsPage from './Component/About us/AboutUsPage';
+import ScholarshipForm from './Component/Applied/ScholarshipForm';
 const App = () => {
   return (
     <>
@@ -14,8 +16,10 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/sign-in/up" element={<SignUpLogin />} />
+      <Route path="/ScholarshipForm" element={<ScholarshipForm />} />
       <Route path="/dashboard" element={<ScholarshipDashboard />} />
-      <Route path="/Apply" element={<StudentInformationForm />} />
+      <Route path="/about" element={<AboutUsPage />} />
+      <Route path="/Apply" element={<ScholarshipForm />} />
     </Routes>
     </>
   );

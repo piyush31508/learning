@@ -1,105 +1,158 @@
-import React, { useState } from 'react';
-import './SignUpLogin.css'; // Import the CSS file for styling
+import React, { useState, useEffect } from 'react';
+import { User, Mail, RefreshCw } from 'lucide-react';
 
-const SignUpLogin = () => {
-  const [rightPanelActive, setRightPanelActive] = useState(false);
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [messageStyle, setMessageStyle] = useState('');
-
-  const handleSignUpClick = () => {
-    setRightPanelActive(true);
-  };
-
-  const handleSignInClick = () => {
-    setRightPanelActive(false);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    // Basic validation
-    if (username && email && password) {
-      setMessage('Signup successful!');
-      setMessageStyle('success');
-      // Normally, you would send the data to a server here
-      // Example: sendDataToServer({ username, email, password });
-    } else {
-      setMessage('Please fill in all fields.');
-      setMessageStyle('error');
-    }
-  };
-
-  return (
-    <div className={`container mx-auto px-[300px] py-[20px] ${rightPanelActive ? 'right-panel-active' : ''}`}>
-      <div className="form-container sign-up-container">
-        <form className="bg-white pt-5 rounded shadow-md" onSubmit={handleSubmit}>
-          <h1 className="text-2xl font-bold mb-6">Create Account</h1>
-          <input
-            type="text"
-            placeholder="Name"
-            className="mb-4 p-2 border rounded w-full"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            className="mb-4 p-2 border rounded w-full"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="mb-4 p-2 border rounded w-full"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button type="submit" className="bg-red-500 text-white p-2 rounded hover:bg-red-600">Sign Up</button>
-        </form>
-      </div>
-
-      <div className="form-container sign-in-container">
-        <form className="bg-white p-6 rounded shadow-md">
-          <h1 className="text-2xl font-bold mb-6">Sign in</h1>
-          <input
-            type="email"
-            placeholder="Email"
-            className="mb-4 p-2 border rounded w-full"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="mb-4 p-2 border rounded w-full"
-          />
-          <a href="#" className="text-sm text-blue-600">Forgot your password?</a>
-          <button type="submit" className="bg-red-500 text-white p-2 rounded mt-4 hover:bg-red-600">Sign In</button>
-        </form>
-      </div>
-
-      <div className="overlay-container">
-        <div className="overlay bg-gradient-to-r from-red-500 to-pink-500">
-          <div className="overlay-panel overlay-left">
-            <h1 className="text-3xl font-bold">Welcome Back!</h1>
-            <p className="text-sm mt-4">To keep connected with us please login with your personal info</p>
-            <button className="ghost mt-4 bg-white text-red-500 p-2 rounded" onClick={handleSignInClick}>
-              Sign In
-            </button>
-          </div>
-          <div className="overlay-panel overlay-right">
-            <h1 className="text-3xl font-bold">Hello, Friend!</h1>
-            <p className="text-sm mt-4">Enter your personal details and start your journey with us</p>
-            <button className="ghost mt-4 bg-white text-red-500 p-2 rounded" onClick={handleSignUpClick}>
-              Sign Up
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+const generateCaptcha = () => {
+  const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let captcha = '';
+  for (let i = 0; i < 6; i++) {
+    captcha += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return captcha;
 };
+
+function SignUpLogin({ onSignUp }) {
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        captcha: '',
+    });
+
+    const [errors, setErrors] = useState({});
+    const [generatedCaptcha, setGeneratedCaptcha] = useState('');
+
+    useEffect(() => {
+        resetCaptcha();
+    }, []);
+
+    const resetCaptcha = () => {
+        setGeneratedCaptcha(generateCaptcha());
+        setFormData(prev => ({ ...prev, captcha: '' }));
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const newErrors = {};
+
+        if (!formData.name || !/^[a-zA-Z\s]*$/.test(formData.name)) {
+            newErrors.name = 'Name is required and should not contain numbers';
+        }
+        if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            newErrors.email = 'Please enter a valid email address';
+        }
+        if (!formData.password || formData.password.length < 8) {
+            newErrors.password = 'Password must be at least 8 characters long';
+        }
+        if (formData.password !== formData.confirmPassword) {
+            newErrors.confirmPassword = 'Passwords do not match';
+        }
+        if (formData.captcha.toUpperCase() !== generatedCaptcha) {
+            newErrors.captcha = 'Incorrect captcha. Please try again.';
+        }
+
+        setErrors(newErrors);
+
+        if (Object.keys(newErrors).length === 0) {
+            onSignUp(formData);
+        }
+    };
+
+    return (
+        <div className="w-full max-w-md mx-auto bg-white shadow-lg mt-10 p-6 rounded-lg">
+            <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-t-lg p-4">
+                <h2 className="text-2xl font-bold">Sign Up for Scholarship</h2>
+                <p className="text-purple-100">Create an account to apply for the scholarship.</p>
+            </div>
+
+            <form className="mt-6 space-y-6" onSubmit={handleSubmit}>
+                <div className="relative">
+                    <User className="absolute top-3 left-3 text-gray-400" size={18} />
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Full Name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className="w-full pl-10 pr-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                    {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+                </div>
+
+                <div className="relative">
+                    <Mail className="absolute top-3 left-3 text-gray-400" size={18} />
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Email Address"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="w-full pl-10 pr-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                    {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                </div>
+
+                <div>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        className="w-full pl-3 pr-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                    {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+                </div>
+
+                <div>
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        placeholder="Confirm Password"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        className="w-full pl-3 pr-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                    {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
+                </div>
+
+                <div className="flex space-x-2">
+                    <input
+                        type="text"
+                        id="captcha"
+                        name="captcha"
+                        placeholder="Enter Captcha"
+                        value={formData.captcha}
+                        onChange={handleChange}
+                        className="flex-grow pl-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                    <div className="flex items-center bg-gray-100 px-3 rounded-md">
+                        <span className="text-lg font-bold text-gray-700">{generatedCaptcha}</span>
+                        <button type="button" onClick={resetCaptcha} className="ml-2 text-purple-600 hover:text-purple-800">
+                            <RefreshCw size={18} />
+                        </button>
+                    </div>
+                </div>
+                {errors.captcha && <p className="text-red-500 text-sm mt-1">{errors.captcha}</p>}
+
+                <button type="submit" className="w-full py-2 px-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-md hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-300">
+                    Sign Up
+                </button>
+            </form>
+        </div>
+    );
+}
 
 export default SignUpLogin;
